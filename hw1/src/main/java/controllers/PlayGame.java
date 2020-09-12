@@ -7,7 +7,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 class PlayGame {
 
-  private static final int PORT_NUMBER = 8080;
+  private static final int PORT_NUMBER = 8070;
 
   private static Javalin app;
 
@@ -24,27 +24,21 @@ class PlayGame {
     app.post("/echo", ctx -> {
       ctx.result(ctx.body());
     });
-
+    
     /**
-     * Please add your end points here.
-     * 
-     * 
-     * 
-     * 
-     * Please add your end points here.
-     * 
-     * 
-     * 
-     * 
-     * Please add your end points here.
-     * 
-     * 
-     * 
-     * 
-     * Please add your end points here.
-     * 
+     * Redirect to tictactoe for GET request 
      */
-
+    app.get("/newgame", ctx -> {
+    	ctx.redirect("/tictactoe.html");
+    });
+  
+    
+    app.post("/startgame", ctx -> {
+    	ctx.result(ctx.body());
+    });
+   
+    
+    
     // Web sockets - DO NOT DELETE or CHANGE
     app.ws("/gameboard", new UiWebSocket());
   }
