@@ -1,6 +1,8 @@
 package controllers;
 
 import io.javalin.Javalin;
+import models.GameBoard;
+
 import java.io.IOException;
 import java.util.Queue;
 import org.eclipse.jetty.websocket.api.Session;
@@ -20,10 +22,6 @@ class PlayGame {
       config.addStaticFiles("/public");
     }).start(PORT_NUMBER);
 
-    // Test Echo Server
-    app.post("/echo", ctx -> {
-      ctx.result(ctx.body());
-    });
     
     /**
      * Redirect to tictactoe for GET request 
@@ -31,10 +29,15 @@ class PlayGame {
     app.get("/newgame", ctx -> {
     	ctx.redirect("/tictactoe.html");
     });
+    
+    /**
+     * initialize the gameboard
+     */
+    GameBoard g = new GameBoard();
   
     
     app.post("/startgame", ctx -> {
-    	ctx.result(ctx.body());
+    	
     });
    
     
