@@ -16,6 +16,17 @@ public class GameBoard {
 
   private boolean isDraw;
 
+  
+  public GameBoard() {
+	  this.p1 = null;
+	  this.p2 = null;
+	  this.gameStarted = false;
+	  this.turn = 1;
+	  this.boardState = new char[3][3];
+	  this.winner = 0;
+	  this.isDraw = false;
+  }
+  
   // a set of getters 
   public Player getP1() {
 	  return p1;
@@ -128,7 +139,7 @@ public class GameBoard {
 		  }
 	  }
 	  
-	  res += ",";
+	  res += "],";
 	  
 	  // winner
 	  res += "\"winner\": " + this.winner + ",";

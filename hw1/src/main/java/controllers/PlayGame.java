@@ -1,7 +1,7 @@
 package controllers;
 
 import io.javalin.Javalin;
-import models.GameBoard;
+import models.*;
 
 import java.io.IOException;
 import java.util.Queue;
@@ -9,7 +9,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 class PlayGame {
 
-  private static final int PORT_NUMBER = 8070;
+  private static final int PORT_NUMBER = 8060;
 
   private static Javalin app;
 
@@ -34,12 +34,32 @@ class PlayGame {
      * initialize the gameboard
      */
     GameBoard g = new GameBoard();
-  
+
     
+    /*
+     * handle POST request for first player 
+     */
     app.post("/startgame", ctx -> {
+    	// initialize our gameboard with player 1
+    	String type = ctx.body();
+    	char t = 'O';
+    	if (type.equals("type=X")) {
+    		t = 'X';
+    	} 
+    	// set player 1 in our gameboard
+    	g.setP1(new Player(t, 1));
     	
+    	// send back json response
+    	ctx.result(g.toJson());
+    	System.out.println(g.toJson());
     });
    
+    /**
+     * handle JoinGame GET request from second player 
+     */
+    app.get("/joingame", ctx -> {
+    	ctx.redirect("/tictactoe.html?p=2");
+    });
     
     
     // Web sockets - DO NOT DELETE or CHANGE

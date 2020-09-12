@@ -39,7 +39,7 @@ public class Player {
 	  String res = "";
       res += "\"p" + id + "\"" ;
 	  res += ": {\n";
-	  res += "\t\"type\": " + "\"" + type + "\""; 
+	  res += "\t\"type\": " + "\"" + type + "\"" + ","; 
 	  res += "\t\"id\": " + "\"" + id + "\""; 
 	  res += "}";
 	  
