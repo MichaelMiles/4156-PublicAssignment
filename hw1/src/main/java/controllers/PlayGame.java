@@ -74,6 +74,29 @@ class PlayGame {
      */
     app.post("/move/:playerId", ctx -> {	
     	String player = ctx.pathParam("playerId");
+    	int id = Integer.parseInt(player);
+    	int x = Integer.parseInt(ctx.body().charAt(2) + "");
+    	int y = Integer.parseInt(ctx.body().charAt(6) + "");
+    	
+    	Player p = ((id == 1) ? g.getP1() : g.getP2());
+    	Move m = new Move(p, x, y);
+    	
+    	// try to add move
+    	String msg = "";
+    	if (g.addMove(m)) {
+    		// added successfully
+    		msg  = "{\"moveValidity\": true, \"code\": 100, \"message\": \"\"}";
+    	} else {
+    		// move invalid 
+    		msg = "{\"moveValidity\": false, \"code\": 100, \"message\": \"Move Invalid!\"}";
+    	}
+    	// send message 
+    	ctx.result(msg);
+    	// update our gameboard
+    	sendGameBoardToAllPlayers(g.toJson());
+    	
+    	
+    	// System.out.println("the player is " + p + " and move are " + x + " " + y);
     });
 
     

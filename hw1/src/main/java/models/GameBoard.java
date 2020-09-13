@@ -1,7 +1,9 @@
 package models;
 
 public class GameBoard {
-
+  
+  static final int maxMoves = 9;
+	
   private Player p1;
 
   private Player p2;
@@ -15,6 +17,8 @@ public class GameBoard {
   private int winner;
 
   private boolean isDraw;
+  
+  private int moves; // to keep track of total moves by all players 
 
   
   public GameBoard() {
@@ -25,6 +29,7 @@ public class GameBoard {
 	  this.boardState = new char[3][3];
 	  this.winner = 0;
 	  this.isDraw = false;
+	  this.moves = 0;
   }
   
   // a set of getters 
@@ -55,7 +60,6 @@ public class GameBoard {
   public boolean getIsDraw() {
 	  return this.isDraw;
   }
-  
   
   
   // a set of setters 
@@ -105,6 +109,29 @@ public class GameBoard {
 	  int y = m.getMY();
 	  
 	  this.boardState[x][y] = m.getPlayer().getType();
+	  // update turn 
+	  if (m.getPlayer().getId() == 1) {
+		  this.turn = 2;
+	  } else {
+		  this.turn = 1;
+	  }
+	  
+	  // update moves
+	  this.moves++;
+	  
+	  // check if we have a winner
+	  // update our gameboard if there is winner or draw 
+	  int winner = this.checkWinner();
+	  if (winner != -1) {
+		  this.winner = winner;
+		  return true;
+	  }
+	  
+	  // otherwise check isDraw
+	  if (this.moves == maxMoves) {
+		  this.isDraw = true;
+	  }
+	  
 	  return true;
   }
   
@@ -174,6 +201,11 @@ public class GameBoard {
 	  int my = m.getMY();
 	  Player p = m.getPlayer();
 	  
+	  // check if it is this player's turn
+	  if (p.getId() != this.turn) {
+		  return false;
+	  }
+	  
 	  char c = 'X';
 	  if (p.getId() == this.p1.getId()) {
 		  c = this.p1.getType();
@@ -193,6 +225,7 @@ public class GameBoard {
 	  if (this.boardState[mx][my] != '\u0000') {
 		  return false;
 	  }
+	 
 	  return true;
   }
   
