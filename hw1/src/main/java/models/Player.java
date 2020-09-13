@@ -40,7 +40,7 @@ public class Player {
       res += "\"p" + id + "\"" ;
 	  res += ": {\n";
 	  res += "\t\"type\": " + "\"" + type + "\"" + ","; 
-	  res += "\t\"id\": " + "\"" + id + "\""; 
+	  res += "\t\"id\": " + id; 
 	  res += "}";
 	  
 	  return res;

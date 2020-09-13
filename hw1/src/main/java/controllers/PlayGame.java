@@ -9,7 +9,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 class PlayGame {
 
-  private static final int PORT_NUMBER = 8060;
+  private static final int PORT_NUMBER = 8080;
 
   private static Javalin app;
 
@@ -51,7 +51,6 @@ class PlayGame {
     	
     	// send back json response
     	ctx.result(g.toJson());
-    	System.out.println(g.toJson());
     });
    
     /**
@@ -59,7 +58,24 @@ class PlayGame {
      */
     app.get("/joingame", ctx -> {
     	ctx.redirect("/tictactoe.html?p=2");
+    	// set up player2 and update our gameboard
+    	char p1Type = g.getP1().getType();
+    	char tmp = 'O';
+    	if (p1Type == 'O') {
+    		tmp = 'X';
+    	}
+    	g.setP2(new Player(tmp, 2));
+    	sendGameBoardToAllPlayers(g.toJson());
     });
+    
+    /*
+     * update the gameboard if the given move is valid
+     */
+    app.post("/move/:playerId", ctx -> {
+    	
+    	System.out.println(ctx.body());
+    });
+
     
     
     // Web sockets - DO NOT DELETE or CHANGE
