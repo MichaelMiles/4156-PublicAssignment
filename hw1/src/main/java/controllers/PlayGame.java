@@ -65,15 +65,15 @@ class PlayGame {
     		tmp = 'X';
     	}
     	g.setP2(new Player(tmp, 2));
+    	g.setGameStarted(true);
     	sendGameBoardToAllPlayers(g.toJson());
     });
     
     /*
      * update the gameboard if the given move is valid
      */
-    app.post("/move/:playerId", ctx -> {
-    	
-    	System.out.println(ctx.body());
+    app.post("/move/:playerId", ctx -> {	
+    	String player = ctx.pathParam("playerId");
     });
 
     
@@ -93,6 +93,7 @@ class PlayGame {
         sessionPlayer.getRemote().sendString(gameBoardJson);
       } catch (IOException e) {
         // Add logger here
+    	System.out.println("something went wrong");
       }
     }
   }

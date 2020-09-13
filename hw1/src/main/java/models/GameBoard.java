@@ -110,7 +110,7 @@ public class GameBoard {
 	  }
 	  
 	  // gameStarted 
-	  res += "\"GameStarted\": ";
+	  res += "\"gameStarted\": ";
 	  if (this.gameStarted) {
 		  res += "true";
 	  } else {
