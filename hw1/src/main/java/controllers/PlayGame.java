@@ -82,21 +82,20 @@ class PlayGame {
     	Move m = new Move(p, x, y);
     	
     	// try to add move
-    	String msg = "";
+    	Message msg;
     	if (g.addMove(m)) {
     		// added successfully
-    		msg  = "{\"moveValidity\": true, \"code\": 100, \"message\": \"\"}";
+    		msg = new Message(true, 100, "");
     	} else {
     		// move invalid 
-    		msg = "{\"moveValidity\": false, \"code\": 100, \"message\": \"Move Invalid!\"}";
+    		msg = new Message(false, 100, "Move Invalid");
     	}
     	// send message 
-    	ctx.result(msg);
+    	ctx.result(msg.getJson());
     	// update our gameboard
     	sendGameBoardToAllPlayers(g.toJson());
     	
     	
-    	// System.out.println("the player is " + p + " and move are " + x + " " + y);
     });
 
     

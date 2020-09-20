@@ -2,25 +2,29 @@ package models;
 
 public class GameBoard {
   
-  static final int maxMoves = 9;
+  static final int maxMoves = 9; // the most total moves players can make on this game board
 	
-  private Player p1;
+  private Player p1; // the first player
 
-  private Player p2;
+  private Player p2; // the second player
 
-  private boolean gameStarted;
+  private boolean gameStarted; // if the game has started or not
 
-  private int turn;
+  private int turn; // the id of the player who plays this turn
 
-  private char[][] boardState;
+  private char[][] boardState; // board status
 
-  private int winner;
+  private int winner; // the id of the winner in this game
 
-  private boolean isDraw;
+  private boolean isDraw; // if this game is a draw 
   
   private int moves; // to keep track of total moves by all players 
 
   
+  
+  /**
+   * construct a new gameboard and initialize the fields
+   */
   public GameBoard() {
 	  this.p1 = null;
 	  this.p2 = null;
@@ -33,60 +37,119 @@ public class GameBoard {
   }
   
   // a set of getters 
+  
+  /**
+   * 
+   * @return the first player of this game
+   */
   public Player getP1() {
 	  return p1;
   }
   
+  /**
+   * 
+   * @return the second player of this game
+   */
   public Player getP2() {
 	  return p2;
   }
   
+  /**
+   * 
+   * @return if the game has started or not
+   */
   public boolean getGameStarted() {
 	  return this.gameStarted;
   }
   
+  /**
+   * 
+   * @return the id of the player who plays this turn
+   */
   public int getTurn() {
 	  return this.turn;
   }
   
+  /**
+   * 
+   * @return the game board status
+   */
   public char[][] getBoardState() {
 	  return this.boardState;
   }
   
+  /**
+   * 
+   * @return the id of the winner
+   */
   public int getWinner() {
 	  return this.winner;
   }
   
+  /**
+   * 
+   * @return if the game is a draw or not
+   */
   public boolean getIsDraw() {
 	  return this.isDraw;
   }
   
   
   // a set of setters 
+  
+  /**
+   * set player 1 with the given player
+   * @param p1 the new player for 1st player
+   */
   public void setP1(Player p1) {
 	  this.p1 = p1;
   } 
   
+  
+  /**
+   * set player 2 with the given player
+   * @param p2 the new player for 2nd player
+   */
   public void setP2(Player p2) {
 	  this.p2 = p2;
   }
   
+  /**
+   * set the status of the game(started or not)
+   * @param t the new status
+   */
   public void setGameStarted(boolean t) {
 	  this.gameStarted = t;
   }
   
+  /**
+   * set the id of the player who should play this turn
+   * @param turn the new assigned turn
+   */
   public void setTurn(int turn) {
 	  this.turn = turn;
   } 
   
+  /**
+   * set the game board status
+   * @param c the new status
+   */
   public void boardState(char[][] c) {
 	  this.boardState = c;
   } 
   
+  /**
+   * set the id of the winner
+   * @param winner the new winner of this game
+   */
   public void setWinnder(int winner) {
 	  this.winner = winner;
   }
   
+  /**
+   * set the draw status of this game
+   * @param t the new statuse for draw or not
+   */
   public void setIsDraw(boolean t) {
 	  this.isDraw = t;
   }
