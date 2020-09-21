@@ -2,35 +2,67 @@ package models;
 
 public class GameBoard {
   
-  static final int maxMoves = 9; // the most total moves players can make on this game board
+  /**
+   * the most total moves players can make on this game board.
+   */
+  static final int MAX_MOVES = 9; 
 	
-  private Player p1; // the first player
-
-  private Player p2; // the second player
-
-  private boolean gameStarted; // if the game has started or not
-
-  private int turn; // the id of the player who plays this turn
-
-  private char[][] boardState; // board status
-
-  private int winner; // the id of the winner in this game
-
-  private boolean isDraw; // if this game is a draw 
+  /**
+   * the length and width of this board.
+   */
+  static final int DIMENSION = 3;
   
-  private int moves; // to keep track of total moves by all players 
+  /**
+   * the first player in this game.
+   */
+  private Player p1; 
+
+  /**
+   * the second player in this game.
+   */
+  private Player p2;
+
+  /**
+   * if the game started or not.
+   */
+  private boolean gameStarted;
+
+  /**
+   * the id of the player who plays this turn.
+   */
+  private int turn;
+
+  /**
+   * board status.
+   */
+  private char[][] boardState;
+
+  /**
+   * the id of the winner.
+   */
+  private int winner;
+
+  /**
+   * if the game is draw or not.
+   */
+  private boolean isDraw;
+  
+  /**
+   * to keep track of total moves by all players.
+   */
+  private int moves;
 
   
   
   /**
-   * construct a new gameboard and initialize the fields
+   * construct a new gameboard and initialize the fields.
    */
   public GameBoard() {
 	  this.p1 = null;
 	  this.p2 = null;
 	  this.gameStarted = false;
 	  this.turn = 1;
-	  this.boardState = new char[3][3];
+	  this.boardState = new char[DIMENSION][DIMENSION];
 	  this.winner = 0;
 	  this.isDraw = false;
 	  this.moves = 0;
@@ -40,7 +72,7 @@ public class GameBoard {
   
   /**
    * 
-   * @return the first player of this game
+   * @return the first player of this game.
    */
   public Player getP1() {
 	  return p1;
@@ -48,7 +80,7 @@ public class GameBoard {
   
   /**
    * 
-   * @return the second player of this game
+   * @return the second player of this game.
    */
   public Player getP2() {
 	  return p2;
@@ -56,7 +88,7 @@ public class GameBoard {
   
   /**
    * 
-   * @return if the game has started or not
+   * @return if the game has started or not.
    */
   public boolean getGameStarted() {
 	  return this.gameStarted;
@@ -64,7 +96,7 @@ public class GameBoard {
   
   /**
    * 
-   * @return the id of the player who plays this turn
+   * @return the id of the player who plays this turn.
    */
   public int getTurn() {
 	  return this.turn;
@@ -72,7 +104,7 @@ public class GameBoard {
   
   /**
    * 
-   * @return the game board status
+   * @return the game board status.
    */
   public char[][] getBoardState() {
 	  return this.boardState;
@@ -80,7 +112,7 @@ public class GameBoard {
   
   /**
    * 
-   * @return the id of the winner
+   * @return the id of the winner.
    */
   public int getWinner() {
 	  return this.winner;
@@ -88,7 +120,7 @@ public class GameBoard {
   
   /**
    * 
-   * @return if the game is a draw or not
+   * @return if the game is a draw or not.
    */
   public boolean getIsDraw() {
 	  return this.isDraw;
@@ -98,70 +130,70 @@ public class GameBoard {
   // a set of setters 
   
   /**
-   * set player 1 with the given player
-   * @param p1 the new player for 1st player
+   * set player 1 with the given player.
+   * @param p the new player for 1st player
    */
-  public void setP1(Player p1) {
-	  this.p1 = p1;
+  public void setP1(final Player p) {
+	  this.p1 = p;
   } 
   
   
   /**
-   * set player 2 with the given player
-   * @param p2 the new player for 2nd player
+   * set player 2 with the given player.
+   * @param p the new player for 2nd player
    */
-  public void setP2(Player p2) {
-	  this.p2 = p2;
+  public void setP2(final Player p) {
+	  this.p2 = p;
   }
   
   /**
-   * set the status of the game(started or not)
+   * set the status of the game(started or not).
    * @param t the new status
    */
-  public void setGameStarted(boolean t) {
+  public void setGameStarted(final boolean t) {
 	  this.gameStarted = t;
   }
   
   /**
-   * set the id of the player who should play this turn
-   * @param turn the new assigned turn
+   * set the id of the player who should play this turn.
+   * @param t the new assigned turn
    */
-  public void setTurn(int turn) {
-	  this.turn = turn;
+  public void setTurn(final int t) {
+	  this.turn = t;
   } 
   
   /**
-   * set the game board status
+   * set the game board status.
    * @param c the new status
    */
-  public void boardState(char[][] c) {
+  public void boardState(final char[][] c) {
 	  this.boardState = c;
   } 
   
   /**
-   * set the id of the winner
-   * @param winner the new winner of this game
+   * set the id of the winner.
+   * @param winer the new winner of this game
    */
-  public void setWinnder(int winner) {
-	  this.winner = winner;
+  public void setWinnder(final int winer) {
+	  this.winner = winer;
   }
   
   /**
-   * set the draw status of this game
+   * set the draw status of this game.
    * @param t the new statuse for draw or not
    */
-  public void setIsDraw(boolean t) {
+  public void setIsDraw(final boolean t) {
 	  this.isDraw = t;
   }
   
   
   
   /**
-   * add move if the given move is valid
+   * add move if the given move is valid.
    * @param m move by the player
    * @return true if move is added, false otherwise
    */
-  public boolean addMove(Move m) {
+  public boolean addMove(final Move m) {
 	  // check if move is valid
 	  if (!this.checkMove(m)) {
 		  return false;
@@ -184,14 +216,14 @@ public class GameBoard {
 	  
 	  // check if we have a winner
 	  // update our gameboard if there is winner or draw 
-	  int winner = this.checkWinner();
-	  if (winner != -1) {
-		  this.winner = winner;
+	  int winer = this.checkWinner();
+	  if (winer != -1) {
+		  this.winner = winer;
 		  return true;
 	  }
 	  
 	  // otherwise check isDraw
-	  if (this.moves == maxMoves) {
+	  if (this.moves == MAX_MOVES) {
 		  this.isDraw = true;
 	  }
 	  
@@ -199,12 +231,12 @@ public class GameBoard {
   }
   
   /**
-   * check if this game has a winner
+   * check if this game has a winner.
    * @return the id of the winner, -1 if no winner 
    */
   public int checkWinner() {
 	  // check player 1
-	  if(this.checkChar(this.p1.getType())) {
+	  if (this.checkChar(this.p1.getType())) {
 		  return this.p1.getId();
 	  }
 	  
@@ -217,35 +249,39 @@ public class GameBoard {
   
   /**
    * helper method for check winner
-   * check if the given char has 3 in a row, or column, or diagonal
+   * check if the given char has 3 in a row, or column, or diagonal.
    * @pre the c must be X or O 
    * @param c the char we are checking 
    * @return true if the given c met the requirement, false otherwise
    */
-  private boolean checkChar(char c) {
+  private boolean checkChar(final char c) {
 	  // check row
-	  for (int x = 0; x < 3; x++) {
-		  if ((this.boardState[x][0] == this.boardState[x][1]) && (this.boardState[x][1] == this.boardState[x][2]) 
-				  && (this.boardState[x][2] == c)) {
+	  for (int x = 0; x < DIMENSION; x++) {
+		  if ((this.boardState[x][0] == this.boardState[x][1])
+			&& (this.boardState[x][1] == this.boardState[x][2])
+			&& (this.boardState[x][2] == c)) {
 			  return true;
 		  } 
 	  }
 	  
 	  // check column 
-	  for (int y = 0; y < 3; y++) {
-		  if ((this.boardState[0][y] == this.boardState[1][y]) && (this.boardState[1][y] == this.boardState[2][y]) 
-				  && (this.boardState[2][y] == c)) {
+	  for (int y = 0; y < DIMENSION; y++) {
+		  if ((this.boardState[0][y] == this.boardState[1][y]) 
+			&& (this.boardState[1][y] == this.boardState[2][y])
+			&& (this.boardState[2][y] == c)) {
 			  return true;
 		  } 
 	  }
 	  
 	  // check diagonal
-	  if ((this.boardState[0][0] == this.boardState[1][1]) && this.boardState[1][1] == this.boardState[2][2]
+	  if ((this.boardState[0][0] == this.boardState[1][1])
+			  && this.boardState[1][1] == this.boardState[2][2]
 			  && this.boardState[1][1] == c) {
 		  return true;
 	  }
 	  
-	  if ((this.boardState[0][2] == this.boardState[1][1]) && this.boardState[1][1] == this.boardState[2][0]
+	  if ((this.boardState[0][2] == this.boardState[1][1])
+			  && this.boardState[1][1] == this.boardState[2][0]
 			  && this.boardState[1][1] == c) {
 		  return true;
 	  }
@@ -255,11 +291,11 @@ public class GameBoard {
   }
   
  /**
-  * check if the given move is valid for this gameboard 
+  * check if the given move is valid for this gameboard.
   * @param m the move that player made 
   * @return true if the move is valid, false otherwise
   */
-  private boolean checkMove(Move m) {
+  private boolean checkMove(final Move m) {
 	  int mx = m.getMX();
 	  int my = m.getMY();
 	  Player p = m.getPlayer();
@@ -328,12 +364,15 @@ public class GameBoard {
 	  
 	  
 	  // board state
-	  res += "\"boardState\": [" ;
+	  res += "\"boardState\": [";
 	  
-	  for(int i =0; i < 3; i++) {
+	  for (int i = 0; i < DIMENSION; i++) {
 		  res += "[";
-		  for (int j = 0; j < 3; j++) {
-			  res += "\"" + String.format("\\u%04x", (int) this.boardState[i][j]) + "\"";
+		  for (int j = 0; j < DIMENSION; j++) {
+			  res += "\"";
+			  int state = (int) this.boardState[i][j];
+			  res += String.format("\\u%04x", state);
+			  res += "\"";
 			  if (j != 2) {
 				  res += ",";
 			  }
@@ -350,7 +389,7 @@ public class GameBoard {
 	  res += "\"winner\": " + this.winner + ",";
 	  // isDraw
 	  res += "\"isDraw\": ";
-	  if(this.isDraw) {
+	  if (this.isDraw) {
 		  res += "true";
 	  } else {
 		  res += "false";

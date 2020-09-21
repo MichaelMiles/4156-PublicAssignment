@@ -1,16 +1,41 @@
 package controllers;
 
-import io.javalin.Javalin;
-import models.*;
-
 import java.io.IOException;
+import io.javalin.Javalin;
 import java.util.Queue;
+
+import models.GameBoard;
+import models.Message;
+import models.Move;
+import models.Player;
+
 import org.eclipse.jetty.websocket.api.Session;
 
 class PlayGame {
 
+  /**
+   * the port this game is hosted on.
+   */
   private static final int PORT_NUMBER = 8080;
 
+  /**
+   * the location of the X coordinate in move message.
+   */
+  private static final int X_LOCATION = 2;
+  
+  /**
+   * the location of the y coordinate in move message.
+   */
+  private static final int Y_LOCATION = 6;
+  
+  /**
+   * the default value for code in response message.
+   */
+  private static final int CODE = 100;
+  
+  /**
+   * the interface.
+   */
   private static Javalin app;
 
   /** Main method of the application.
@@ -23,14 +48,15 @@ class PlayGame {
     }).start(PORT_NUMBER);
 
     
-    /**
+    /*
+     * 
      * Redirect to tictactoe for GET request 
      */
     app.get("/newgame", ctx -> {
     	ctx.redirect("/tictactoe.html");
     });
     
-    /**
+    /*
      * initialize the gameboard
      */
     GameBoard g = new GameBoard();
@@ -53,8 +79,8 @@ class PlayGame {
     	ctx.result(g.toJson());
     });
    
-    /**
-     * handle JoinGame GET request from second player 
+    /*
+     * handle JoinGame GET request from second player
      */
     app.get("/joingame", ctx -> {
     	ctx.redirect("/tictactoe.html?p=2");
@@ -68,38 +94,36 @@ class PlayGame {
     	g.setGameStarted(true);
     	sendGameBoardToAllPlayers(g.toJson());
     });
-    
+
     /*
      * update the gameboard if the given move is valid
      */
-    app.post("/move/:playerId", ctx -> {	
+    app.post("/move/:playerId", ctx -> {
     	String player = ctx.pathParam("playerId");
     	int id = Integer.parseInt(player);
-    	int x = Integer.parseInt(ctx.body().charAt(2) + "");
-    	int y = Integer.parseInt(ctx.body().charAt(6) + "");
-    	
+
+    	int x = Integer.parseInt(ctx.body().charAt(X_LOCATION) + "");
+    	int y = Integer.parseInt(ctx.body().charAt(Y_LOCATION) + "");
+
     	Player p = ((id == 1) ? g.getP1() : g.getP2());
     	Move m = new Move(p, x, y);
-    	
+
     	// try to add move
     	Message msg;
     	if (g.addMove(m)) {
     		// added successfully
-    		msg = new Message(true, 100, "");
+    		msg = new Message(true, CODE, "");
     	} else {
-    		// move invalid 
-    		msg = new Message(false, 100, "Move Invalid");
+    		// move invalid
+    		msg = new Message(false, CODE, "Move Invalid");
     	}
-    	// send message 
+    	// send message
     	ctx.result(msg.getJson());
     	// update our gameboard
     	sendGameBoardToAllPlayers(g.toJson());
-    	
-    	
+	
     });
 
-    
-    
     // Web sockets - DO NOT DELETE or CHANGE
     app.ws("/gameboard", new UiWebSocket());
   }

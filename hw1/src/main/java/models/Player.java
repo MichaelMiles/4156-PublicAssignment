@@ -2,24 +2,30 @@ package models;
 
 public class Player {
 
+  /**
+   * the type X or O of this player.
+   */
   private char type;
 
+  /**
+   * the id of this player.
+   */
   private int id;
   
   /**
-   * Create a player with the given type and ID 
-   * @param type the type of the player
-   * @param id the id of the player 
+   * Create a player with the given type and ID.
+   * @param newType the type of the player
+   * @param identity the id of the player 
    */
-  public Player(char type, int id) {
-	  this.type = type;
-	  this.id = id;
+  public Player(final char newType, final int identity) {
+	  this.type = newType;
+	  this.id = identity;
   }
   
   // a set of getters 
   
   /**
-   * Getter for type
+   * Getter for type.
    * @return the type of this player
    */
   public char getType() {
@@ -27,7 +33,7 @@ public class Player {
   }
   
   /**
-   * Getter for ID
+   * Getter for ID.
    * @return the id of the player
    */
   public int getId() {
@@ -35,22 +41,21 @@ public class Player {
   }
   
   // a set of setters
-  
-  
+
   /**
-   * Reset this player's type with the given type
-   * @param type the type that needs to be set to this player
+   * Reset this player's type with the given type.
+   * @param newType the type that needs to be set to this player
    */
-  public void setType(char type) {
-	  this.type = type;
+  public void setType(final char newType) {
+	  this.type = newType;
   }
   
   /**
-   * Reset tis player's id with the given id
-   * @param id the id that needs to be assigned to this player
+   * Reset this player's id with the given id.
+   * @param identity the id that needs to be assigned to this player
    */
-  public void setId(int id) {
-	  this.id = id;
+  public void setId(final int identity) {
+	  this.id = identity;
   }
   
   
@@ -60,7 +65,7 @@ public class Player {
    */
   public String toJson() {
 	  String res = "";
-      res += "\"p" + id + "\"" ;
+      res += "\"p" + id + "\"";
 	  res += ": {\n";
 	  res += "\t\"type\": " + "\"" + type + "\"" + ","; 
 	  res += "\t\"id\": " + id; 
