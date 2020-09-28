@@ -83,13 +83,4 @@ public class Message {
 	  this.message = msg;
   }
   
-  /**
-   * 
-   * @return the json msg of this message
-   */
-  public String getJson() {
-	  return "{\"moveValidity\": " + this.moveValidity + ", \"code\": " 
-			  + this.code + ", \"message\": \""
-			  + this.message + "\"}";
-  }
 }

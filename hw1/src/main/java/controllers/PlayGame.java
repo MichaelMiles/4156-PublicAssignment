@@ -11,6 +11,8 @@ import models.Player;
 
 import org.eclipse.jetty.websocket.api.Session;
 
+import com.google.gson.Gson;
+
 class PlayGame {
 
   /**
@@ -60,7 +62,7 @@ class PlayGame {
      * initialize the gameboard
      */
     GameBoard g = new GameBoard();
-
+    Gson gson= new Gson();
     
     /*
      * handle POST request for first player 
@@ -76,7 +78,7 @@ class PlayGame {
     	g.setP1(new Player(t, 1));
     	
     	// send back json response
-    	ctx.result(g.toJson());
+    	ctx.result(gson.toJson(g));
     });
    
     /*
@@ -92,7 +94,7 @@ class PlayGame {
     	}
     	g.setP2(new Player(tmp, 2));
     	g.setGameStarted(true);
-    	sendGameBoardToAllPlayers(g.toJson());
+    	sendGameBoardToAllPlayers(gson.toJson(g));
     });
 
     /*
@@ -118,10 +120,10 @@ class PlayGame {
     		msg = new Message(false, CODE, "Move Invalid");
     	}
     	// send message
-    	ctx.result(msg.getJson());
+    	ctx.result(gson.toJson(msg));
     	// update our gameboard
-    	sendGameBoardToAllPlayers(g.toJson());
-	
+    	sendGameBoardToAllPlayers(gson.toJson(g));
+    
     });
 
     // Web sockets - DO NOT DELETE or CHANGE

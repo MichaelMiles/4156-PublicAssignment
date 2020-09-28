@@ -59,19 +59,5 @@ public class Player {
   }
   
   
-  /**
-   * 
-   * @return this player object in Json format
-   */
-  public String toJson() {
-	  String res = "";
-      res += "\"p" + id + "\"";
-	  res += ": {\n";
-	  res += "\t\"type\": " + "\"" + type + "\"" + ","; 
-	  res += "\t\"id\": " + id; 
-	  res += "}";
-	  
-	  return res;
-  }
 
 }

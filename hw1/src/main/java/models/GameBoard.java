@@ -166,7 +166,7 @@ public class GameBoard {
    * set the game board status.
    * @param c the new status
    */
-  public void boardState(final char[][] c) {
+  public void setBoardState(final char[][] c) {
 	  this.boardState = c;
   } 
   
@@ -328,76 +328,5 @@ public class GameBoard {
 	  return true;
   }
   
-  
-  
-  
-  /**    
-   * @return the information of Gameboard in Json format
-   */
-  public String toJson() {
-	  String res = "";
-	  
-	  res += "{";
-	  
-	  // players info
-	  if (this.p1 != null) {
-		res += p1.toJson();
-		res += ",";
-	  }
-	  
-	  if (this.p2 != null) {
-		  res += p2.toJson();
-		  res += ",";
-	  }
-	  
-	  // gameStarted 
-	  res += "\"gameStarted\": ";
-	  if (this.gameStarted) {
-		  res += "true";
-	  } else {
-		  res += "false";
-	  }
-	  res += ",";
-	  
-	  // turn
-	  res += "\"turn\": " + this.turn + ",";
-	  
-	  
-	  // board state
-	  res += "\"boardState\": [";
-	  
-	  for (int i = 0; i < DIMENSION; i++) {
-		  res += "[";
-		  for (int j = 0; j < DIMENSION; j++) {
-			  res += "\"";
-			  int state = (int) this.boardState[i][j];
-			  res += String.format("\\u%04x", state);
-			  res += "\"";
-			  if (j != 2) {
-				  res += ",";
-			  }
-		  }
-		  res += "]";
-		  if (i != 2) {
-			  res += ",";
-		  }
-	  }
-	  
-	  res += "],";
-	  
-	  // winner
-	  res += "\"winner\": " + this.winner + ",";
-	  // isDraw
-	  res += "\"isDraw\": ";
-	  if (this.isDraw) {
-		  res += "true";
-	  } else {
-		  res += "false";
-	  }
-	  
-	  
-	  res += "}";
 
-	  return res;
-  }
 }
