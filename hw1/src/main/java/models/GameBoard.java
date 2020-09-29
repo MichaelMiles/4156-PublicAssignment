@@ -102,13 +102,7 @@ public class GameBoard {
 	  return this.turn;
   }
   
-  /**
-   * 
-   * @return the game board status.
-   */
-  public char[][] getBoardState() {
-	  return this.boardState;
-  }
+
   
   /**
    * 
@@ -160,14 +154,6 @@ public class GameBoard {
    */
   public void setTurn(final int t) {
 	  this.turn = t;
-  } 
-  
-  /**
-   * set the game board status.
-   * @param c the new status
-   */
-  public void setBoardState(final char[][] c) {
-	  this.boardState = c;
   } 
   
   /**
