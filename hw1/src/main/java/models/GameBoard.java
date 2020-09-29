@@ -306,12 +306,13 @@ public class GameBoard {
 	  }
 	  
 	  char c = 'X';
-	  if (p.getId() == this.p1.getId()) {
+	  if (this.turn == 1) {
 		  c = this.p1.getType();
-	  } else if (p.getId() == this.p2.getId()) {
-		  c = this.p2.getType();
 	  } else {
-		  // this player's id is invalid 
+		  c = this.p2.getType();
+	  }
+	  // check if the player is valid player
+	  if (p.getType() != c) {
 		  return false;
 	  }
 	  
