@@ -83,5 +83,121 @@ class GameBoardTest {
 		assertFalse(g.addMove(m));
 	}
 	
+	@Test
+	@Order(6)
+	void testCheckWinnerInRow() {
+		Move m = new Move(p2, 1, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 0, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 2, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 0, 2);
+		assertTrue(g.addMove(m));
+		assertEquals(g.checkWinner(), 1);
+		assertEquals(g.getWinner(), 1);
+		assertFalse(g.getIsDraw());
+	}
+	
+	@Test
+	@Order(7)
+	void testCheckWinnerInColumn() {
+		g = new GameBoard();
+		this.initGameBoard();
+		assertEquals(g.getWinner(), 0);
+		Move m = new Move(p1, 0, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 0, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 0, 2);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 1, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 1, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 2, 0);
+		assertTrue(g.addMove(m));
+		assertEquals(g.checkWinner(), 2);
+		assertEquals(g.getWinner(), 2);
+		assertFalse(g.getIsDraw());
+	}
+	
+	
+	@Test
+	@Order(8)
+	void testCheckWinnerInDiagonal() {
+		g = new GameBoard();
+		this.initGameBoard();
+		assertEquals(g.getWinner(), 0);
+		Move m = new Move(p1, 0, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 0, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 0, 2);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 1, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 1, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 2, 2);
+		assertTrue(g.addMove(m));
+		assertEquals(g.checkWinner(), 2);
+		assertEquals(g.getWinner(), 2);
+		assertFalse(g.getIsDraw());
+	}
+	
+	
+	@Test
+	@Order(9)
+	void testCheckWinnerInBackDiagonal() {
+		g = new GameBoard();
+		this.initGameBoard();
+		assertEquals(g.getWinner(), 0);
+		Move m = new Move(p1, 0, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 0, 2);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 2, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 1, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 1, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 2, 0);
+		assertTrue(g.addMove(m));
+		assertEquals(g.checkWinner(), 2);
+		assertEquals(g.getWinner(), 2);
+		assertFalse(g.getIsDraw());
+	}
+	
+	@Test
+	@Order(8)
+	void testCheckIsDraw() {
+		g = new GameBoard();
+		this.initGameBoard();
+		assertEquals(g.getWinner(), 0);
+		Move m = new Move(p1, 0, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 0, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 0, 2);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 1, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 1, 1);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 2, 2);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 1, 2);
+		assertTrue(g.addMove(m));
+		m = new Move(p2, 2, 0);
+		assertTrue(g.addMove(m));
+		m = new Move(p1, 2, 1);
+		assertTrue(g.addMove(m));
+		assertEquals(g.checkWinner(), -1);
+		assertEquals(g.getWinner(), 0);
+		assertTrue(g.getIsDraw());
+	}
+	
 
 }
