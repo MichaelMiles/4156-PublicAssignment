@@ -307,6 +307,7 @@ public class GameBoard {
 		  c = this.p2.getType();
 	  }
 	  // check if the player is valid player
+	  // can't be reached by integration tests 
 	  if (p.getType() != c) {
 		  return false;
 	  }
