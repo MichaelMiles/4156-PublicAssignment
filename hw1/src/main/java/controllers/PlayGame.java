@@ -13,22 +13,12 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import com.google.gson.Gson;
 
-class PlayGame {
+public class PlayGame {
 
   /**
    * the port this game is hosted on.
    */
   private static final int PORT_NUMBER = 8080;
-
-  /**
-   * the location of the X coordinate in move message.
-   */
-  private static final int X_LOCATION = 2;
-  
-  /**
-   * the location of the y coordinate in move message.
-   */
-  private static final int Y_LOCATION = 6;
   
   /**
    * the default value for code in response message.
@@ -104,8 +94,13 @@ class PlayGame {
     	String player = ctx.pathParam("playerId");
     	int id = Integer.parseInt(player);
 
-    	int x = Integer.parseInt(ctx.body().charAt(X_LOCATION) + "");
-    	int y = Integer.parseInt(ctx.body().charAt(Y_LOCATION) + "");
+    	
+    	String[] param = ctx.body().split("&");
+    	String x1 = param[0].split("=")[1];
+    	int x = Integer.parseInt(x1);
+    	
+    	String y1 = param[1].split("=")[1];
+    	int y = Integer.parseInt(y1);
 
     	Player p = ((id == 1) ? g.getP1() : g.getP2());
     	Move m = new Move(p, x, y);

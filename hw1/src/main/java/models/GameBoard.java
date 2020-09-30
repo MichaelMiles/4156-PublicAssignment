@@ -181,6 +181,7 @@ public class GameBoard {
    */
   public boolean addMove(final Move m) {
 	  // check if move is valid
+	  // could add on if max moves has been reached
 	  if (!this.checkMove(m)) {
 		  return false;
 	  }
@@ -282,6 +283,11 @@ public class GameBoard {
   * @return true if the move is valid, false otherwise
   */
   private boolean checkMove(final Move m) {
+	  // check if we have a winner or draw
+	  if ((this.winner != 0) || this.isDraw) {
+		  return false;
+	  }
+	  
 	  int mx = m.getMX();
 	  int my = m.getMY();
 	  Player p = m.getPlayer();

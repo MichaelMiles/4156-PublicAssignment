@@ -97,6 +97,9 @@ class GameBoardTest {
 		assertEquals(g.checkWinner(), 1);
 		assertEquals(g.getWinner(), 1);
 		assertFalse(g.getIsDraw());
+		// test if we can add another move after winner 
+		m = new Move(p2, 2, 1);
+		assertFalse(g.addMove(m));
 	}
 	
 	@Test
@@ -168,6 +171,9 @@ class GameBoardTest {
 		assertEquals(g.checkWinner(), 2);
 		assertEquals(g.getWinner(), 2);
 		assertFalse(g.getIsDraw());
+		// test if we can add another move after winner 
+		m = new Move(p1, 2, 1);
+		assertFalse(g.addMove(m));
 	}
 	
 	@Test
@@ -197,6 +203,9 @@ class GameBoardTest {
 		assertEquals(g.checkWinner(), -1);
 		assertEquals(g.getWinner(), 0);
 		assertTrue(g.getIsDraw());
+		// test if we can add another move after isDraw
+		m = new Move(p2, 2, 1);
+		assertFalse(g.addMove(m));
 	}
 	
 
