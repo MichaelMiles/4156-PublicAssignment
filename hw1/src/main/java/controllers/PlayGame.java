@@ -13,7 +13,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import com.google.gson.Gson;
 
-public class PlayGame {
+public final class PlayGame {
 
   /**
    * the port this game is hosted on.
@@ -29,6 +29,14 @@ public class PlayGame {
    * the interface.
    */
   private static Javalin app;
+  
+  
+  /**
+   * private constructor.
+   */
+  private PlayGame() {
+	  // private constructor
+  }
 
   /** Main method of the application.
    * @param args Command line arguments
@@ -52,7 +60,7 @@ public class PlayGame {
      * initialize the gameboard
      */
     GameBoard g = new GameBoard();
-    Gson gson= new Gson();
+    Gson gson = new Gson();
     
     /*
      * handle POST request for first player 
@@ -141,6 +149,9 @@ public class PlayGame {
     }
   }
 
+  /**
+   * stop the app.
+   */
   public static void stop() {
     app.stop();
   }

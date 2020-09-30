@@ -287,7 +287,7 @@ public class GameBoard {
 	  if ((this.winner != 0)) {
 		  return false;
 	  }
-	  if(this.isDraw) {
+	  if (this.isDraw) {
 		  return false;
 	  }
 	  
