@@ -284,7 +284,10 @@ public class GameBoard {
   */
   private boolean checkMove(final Move m) {
 	  // check if we have a winner or draw
-	  if ((this.winner != 0) || this.isDraw) {
+	  if ((this.winner != 0)) {
+		  return false;
+	  }
+	  if(this.isDraw) {
 		  return false;
 	  }
 	  
