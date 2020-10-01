@@ -107,6 +107,24 @@ public class PlayGameTest {
     
     @Test
     @Order(3)
+    public void makeMoveBeforeJoinTest() {
+    	HttpResponse response = Unirest.post("http://localhost:8080/move/1").body("x=0&y=0").asString();
+    	String responseBody =  (String) response.getBody();
+    	JSONObject jsonObject = new JSONObject(responseBody);
+    	System.out.println("Invalid move due to turn: " + responseBody);
+    	
+    	// gson 
+    	Gson gson = new Gson();
+    	Message m = gson.fromJson(jsonObject.toString(), Message.class);
+
+    	// check validity code and message
+    	assertFalse(m.getMoveValidity());
+    	assertEquals(100, m.getCode());
+    	assertEquals(m.getMessage(), "Move Invalid");
+    }
+    
+    @Test
+    @Order(4)
     public void joinGameTest() {
     	HttpResponse response = Unirest.get("http://localhost:8080/joingame").asString();
     	int restStatus = response.getStatus();
@@ -114,7 +132,7 @@ public class PlayGameTest {
     }
     
     @Test
-    @Order(4)
+    @Order(5)
     public void moveInInvalidTurnTest() {
     	
     	// ---------------------------- one single move -------------------------------------/
@@ -136,7 +154,7 @@ public class PlayGameTest {
     } 
     
     @Test
-    @Order(5)
+    @Order(6)
     public void moveValidTest() {
        	// ---------------------------- one single move -------------------------------------/
     	// try invalid move from p2
@@ -155,7 +173,7 @@ public class PlayGameTest {
     }
     
     @Test
-    @Order(6)
+    @Order(7)
     public void moveInvalidCoordinatesXBiggerThan2Test() {
     	// ---------------------------- one single move -------------------------------------/
     	// try invalid move from p2
@@ -176,7 +194,7 @@ public class PlayGameTest {
     
     
     @Test
-    @Order(7)
+    @Order(8)
     public void moveInvalidCoordinatesXNegativeTest() {
     	// ---------------------------- one single move -------------------------------------/
     	// try invalid move from p2
@@ -196,7 +214,7 @@ public class PlayGameTest {
     }
     
     @Test
-    @Order(8)
+    @Order(9)
     public void moveInvalidCoordinatesYBiggerThan2Test() {
     	// ---------------------------- one single move -------------------------------------/
     	// try invalid move from p2
@@ -216,7 +234,7 @@ public class PlayGameTest {
     }
     
     @Test
-    @Order(9)
+    @Order(10)
     public void moveInvalidCoordinatesYNegativeTest() {
     	// ---------------------------- one single move -------------------------------------/
     	// try invalid move from p2
@@ -236,7 +254,7 @@ public class PlayGameTest {
     }
     
     @Test
-    @Order(10)
+    @Order(11)
     public void moveInvalidDuplicateMove() {
     	// ---------------------------- one single move -------------------------------------/
     	// try invalid move from p2
@@ -257,7 +275,7 @@ public class PlayGameTest {
     
     
     @Test
-    @Order(11)
+    @Order(12)
     public void endTheGameWithWinnerTest() {
     	Unirest.post("http://localhost:8080/move/2").body("x=2&y=0").asString();
     	Unirest.post("http://localhost:8080/move/1").body("x=0&y=1").asString();
@@ -284,7 +302,7 @@ public class PlayGameTest {
      * we test if we can make move when the game is over
      */
     @Test
-    @Order(12)
+    @Order(13)
     public void moveReachMaxMovesTest() {
        	// ---------------------------- many moves -------------------------------------/
     	// try invalid move from p2
@@ -308,7 +326,7 @@ public class PlayGameTest {
      * we test if we can add a player1 with 'O' and produce draw situation
      */
     @Test
-    @Order(13)
+    @Order(14)
     public void addPlayer1WithOCharTestAndTestIsDraw() {
     	// we reset
     	this.close();
@@ -402,7 +420,7 @@ public class PlayGameTest {
      * we test if a player can win in row
      */
     @Test
-    @Order(14)
+    @Order(15)
     public void rowWinnerTest() {
     	// we reset
     	this.close();
@@ -477,7 +495,7 @@ public class PlayGameTest {
      * we test if a player can win in col
      */
     @Test
-    @Order(15)
+    @Order(16)
     public void colWinnerTest() {
     	// we reset
     	this.close();
@@ -553,7 +571,7 @@ public class PlayGameTest {
      * we test if a player can win in diagonal
      */
     @Test
-    @Order(15)
+    @Order(17)
     public void diagonalWinnerTest() {
     	// we reset
     	this.close();
@@ -628,7 +646,7 @@ public class PlayGameTest {
      * we test if a player can win in another diagonal
      */
     @Test
-    @Order(16)
+    @Order(18)
     public void backDiagonalWinnerTest() {
     	// we reset
     	this.close();
@@ -697,6 +715,35 @@ public class PlayGameTest {
     	// check validity code and message
     	assertFalse(m.getMoveValidity());
     	assertEquals(100, m.getCode());
+    }
+    
+    @Test
+    @Order(19) 
+    public void addMoveBeforeGame() {
+    	// we reset
+    	this.close();
+    	this.init();
+    	
+        HttpResponse response = Unirest.get("http://localhost:8080/newgame").asString();
+        int restStatus = response.getStatus();
+        
+        // Check assert statement (New Game has started)
+        assertEquals(restStatus, 200);
+        System.out.println("Test New Game");
+        
+        response = Unirest.post("http://localhost:8080/move/2").body("x=0&y=0").asString();
+    	String responseBody =  (String) response.getBody();
+    	JSONObject jsonObject = new JSONObject(responseBody);
+    	System.out.println("Invalid move due to turn: " + responseBody);
+    	
+    	// gson 
+    	Gson gson = new Gson();
+    	Message m = gson.fromJson(jsonObject.toString(), Message.class);
+
+    	// check validity code and message
+    	assertFalse(m.getMoveValidity());
+    	assertEquals(100, m.getCode());
+    	assertEquals(m.getMessage(), "Move Invalid");
     }
     
     /**

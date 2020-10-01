@@ -290,7 +290,12 @@ public class GameBoard {
 	  if (this.isDraw) {
 		  return false;
 	  }
-	  
+	  if(this.p1 == null) {
+		  return false;
+	  }
+	  if (this.p2 == null) {
+		  return false;
+	  }
 	  int mx = m.getMX();
 	  int my = m.getMY();
 	  Player p = m.getPlayer();

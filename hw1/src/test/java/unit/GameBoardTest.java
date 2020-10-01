@@ -208,5 +208,20 @@ class GameBoardTest {
 		assertFalse(g.addMove(m));
 	}
 	
+	@Test
+	@Order(9)
+	void testAddMoveWithNoPlaye1() {
+		g = new GameBoard();
+		assertFalse(g.addMove(new Move(p1, 0, 0)));
+	}
+	
+	@Test
+	@Order(10)
+	void testAddMoveWithNoPlaye2() {
+		g = new GameBoard();
+		g.setP1(p1);
+		assertFalse(g.addMove(new Move(p2, 0, 0)));
+	}
+
 
 }
