@@ -1,3 +1,6 @@
+/**
+ * the package includes all the controllers for this application
+ */
 package controllers;
 
 import java.io.IOException;
@@ -30,7 +33,17 @@ public final class PlayGame {
    */
   private static Javalin app;
   
+  /**
+   * the gameboard.
+   */
+  private static GameBoard g;
   
+  /**
+   * gson.
+   */
+  private static Gson gson;
+  
+
   /**
    * private constructor.
    */
@@ -56,17 +69,14 @@ public final class PlayGame {
     	ctx.redirect("/tictactoe.html");
     });
     
-    /*
-     * initialize the gameboard
-     */
-    GameBoard g = new GameBoard();
-    Gson gson = new Gson();
+
     
     /*
      * handle POST request for first player 
      */
     app.post("/startgame", ctx -> {
     	// initialize our gameboard with player 1
+    	g = new GameBoard();
     	String type = ctx.body();
     	char t = 'O';
     	if (type.equals("type=X")) {

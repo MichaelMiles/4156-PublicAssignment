@@ -1,3 +1,6 @@
+/**
+ * all the models for back-end
+ */
 package models;
 
 public class GameBoard {
