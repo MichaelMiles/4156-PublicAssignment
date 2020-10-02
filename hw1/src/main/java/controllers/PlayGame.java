@@ -34,7 +34,7 @@ public final class PlayGame {
   /**
    * the gameboard.
    */
-  private static GameBoard g;
+  private static GameBoard gameboard;
 
   /**
    * gson.
@@ -76,17 +76,19 @@ public final class PlayGame {
      */
     app.post("/startgame", ctx -> {
       // initialize our gameboard with player 1
-      g = new GameBoard();
+      gameboard = new GameBoard();
+      gson = new Gson();
+      
       String type = ctx.body();
       char t = 'O';
       if (type.equals("type=X")) {
         t = 'X';
       }
       // set player 1 in our gameboard
-      g.setP1(new Player(t, 1));
+      gameboard.setP1(new Player(t, 1));
 
       // send back json response
-      ctx.result(gson.toJson(g));
+      ctx.result(gson.toJson(gameboard));
     });
 
     /*
@@ -95,14 +97,14 @@ public final class PlayGame {
     app.get("/joingame", ctx -> {
       ctx.redirect("/tictactoe.html?p=2");
       // set up player2 and update our gameboard
-      char p1Type = g.getP1().getType();
+      char p1Type = gameboard.getP1().getType();
       char tmp = 'O';
       if (p1Type == 'O') {
         tmp = 'X';
       }
-      g.setP2(new Player(tmp, 2));
-      g.setGameStarted(true);
-      sendGameBoardToAllPlayers(gson.toJson(g));
+      gameboard.setP2(new Player(tmp, 2));
+      gameboard.setGameStarted(true);
+      sendGameBoardToAllPlayers(gson.toJson(gameboard));
     });
 
     /*
@@ -120,12 +122,12 @@ public final class PlayGame {
       String y1 = param[1].split("=")[1];
       int y = Integer.parseInt(y1);
 
-      Player player = ((id == 1) ? g.getP1() : g.getP2());
+      Player player = ((id == 1) ? gameboard.getP1() : gameboard.getP2());
       Move move = new Move(player, x, y);
 
       // try to add move
       Message msg;
-      if (g.addMove(move)) {
+      if (gameboard.addMove(move)) {
         // added successfully
         msg = new Message(true, CODE, "");
       } else {
@@ -135,7 +137,7 @@ public final class PlayGame {
       // send message
       ctx.result(gson.toJson(msg));
       // update our gameboard
-      sendGameBoardToAllPlayers(gson.toJson(g));
+      sendGameBoardToAllPlayers(gson.toJson(gameboard));
 
     });
 
