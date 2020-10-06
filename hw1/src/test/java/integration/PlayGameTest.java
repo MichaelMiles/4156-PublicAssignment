@@ -301,7 +301,7 @@ public class PlayGameTest {
   }
 
   /**
-   * we test if we can make move when the game is over
+   * we test if we can make move when the game is over.
    */
   @Test
   @Order(13)
@@ -325,7 +325,7 @@ public class PlayGameTest {
 
 
   /**
-   * we test if we can add a player1 with 'O' and produce draw situation
+   * we test if we can add a player1 with 'O' and produce draw situation.
    */
   @Test
   @Order(14)
@@ -419,7 +419,7 @@ public class PlayGameTest {
 
 
   /**
-   * we test if a player can win in row
+   * we test if a player can win in row.
    */
   @Test
   @Order(15)
@@ -495,7 +495,7 @@ public class PlayGameTest {
   }
 
   /**
-   * we test if a player can win in col
+   * we test if a player can win in col.
    */
   @Test
   @Order(16)
@@ -572,7 +572,7 @@ public class PlayGameTest {
   }
 
   /**
-   * we test if a player can win in diagonal
+   * we test if a player can win in diagonal.
    */
   @Test
   @Order(17)
@@ -648,7 +648,7 @@ public class PlayGameTest {
   }
 
   /**
-   * we test if a player can win in another diagonal
+   * we test if a player can win in another diagonal.
    */
   @Test
   @Order(18)
