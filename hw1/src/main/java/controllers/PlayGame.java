@@ -181,7 +181,6 @@ public final class PlayGame {
       String playerId = ctx.pathParam("playerId");
       int id = Integer.parseInt(playerId);
 
-      System.out.println(ctx.body());
       String[] param = ctx.body().split("&");
       String x1 = param[0].split("=")[1];
       int x = Integer.parseInt(x1);
