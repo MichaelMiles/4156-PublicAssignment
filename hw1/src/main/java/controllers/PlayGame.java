@@ -4,15 +4,20 @@
 
 package controllers;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Queue;
+import org.eclipse.jetty.websocket.api.Session;
 import com.google.gson.Gson;
 import io.javalin.Javalin;
-import java.io.IOException;
-import java.util.Queue;
 import models.GameBoard;
 import models.Message;
 import models.Move;
 import models.Player;
-import org.eclipse.jetty.websocket.api.Session;
 
 public final class PlayGame {
 
@@ -30,6 +35,11 @@ public final class PlayGame {
    * the interface.
    */
   private static Javalin app;
+
+  /**
+   * database interface.
+   */
+  private static Connection conn;
 
   /**
    * the gameboard.
@@ -56,9 +66,30 @@ public final class PlayGame {
    */
   public static void main(final String[] args) {
 
+
     app = Javalin.create(config -> {
       config.addStaticFiles("/public");
+      try {
+        Class.forName("org.sqlite.JDBC");
+        conn = DriverManager.getConnection("jdbc:sqlite:game.db");
+        conn.setAutoCommit(false);
+        // try to recover from potential crash by checking if such table exists
+        DatabaseMetaData dbm = conn.getMetaData();
+        ResultSet tables = dbm.getTables(null, null, "GAME", null);
+        if (tables.next()) {
+          // we restore
+          gameboard = new GameBoard();
+          gson = new Gson();
+          gameboard.restoreState(conn);
+        }
+        tables.close();
+      } catch (Exception e) {
+        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        System.exit(0);
+      }
+      System.out.println("Opened database successfully");
     }).start(PORT_NUMBER);
+
 
 
     /*
@@ -66,6 +97,19 @@ public final class PlayGame {
      * Redirect to tictactoe for GET request
      */
     app.get("/newgame", ctx -> {
+      // initialize our database and clean table GAME
+      Statement stmt;
+      stmt = conn.createStatement();
+      String sql = "DROP TABLE IF EXISTS GAME";
+      stmt.executeUpdate(sql);
+      sql = "CREATE TABLE GAME " + "(PLAYERONE      CHAR(1)," + " PLAYERTWO      CHAR(1), "
+          + " GAMESTARTED    BOOLEAN  DEFAULT  0, " + " TURN           INT      DEFAULT  1, "
+          + " BOARDSTATE     CHAR(9), " + " WINNER         INT      DEFAULT  0, "
+          + " ISDRAW         BOOLEAN  DEFAULT  0, "
+          + " MOVES          INT   PRIMARY KEY   DEFAULT  0);";
+      stmt.executeUpdate(sql);
+      stmt.close();
+      conn.commit();
       ctx.redirect("/tictactoe.html");
     });
 
@@ -78,7 +122,7 @@ public final class PlayGame {
       // initialize our gameboard with player 1
       gameboard = new GameBoard();
       gson = new Gson();
-      
+
       String type = ctx.body();
       char t = 'O';
       if (type.equals("type=X")) {
@@ -86,6 +130,18 @@ public final class PlayGame {
       }
       // set player 1 in our gameboard
       gameboard.setP1(new Player(t, 1));
+
+      // update the db
+      try {
+        Statement stmt = conn.createStatement();
+        String sql = "INSERT INTO GAME(moves, playerone) values (0, \'" + t + "\');";
+        stmt.executeUpdate(sql);
+        stmt.close();
+        conn.commit();
+      } catch (Exception e) {
+        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        System.exit(0);
+      }
 
       // send back json response
       ctx.result(gson.toJson(gameboard));
@@ -104,6 +160,17 @@ public final class PlayGame {
       }
       gameboard.setP2(new Player(tmp, 2));
       gameboard.setGameStarted(true);
+      // update the db
+      try {
+        Statement stmt = conn.createStatement();
+        String sql = "UPDATE GAME SET playertwo = \'" + tmp + "\', gamestarted = true ;";
+        stmt.executeUpdate(sql);
+        stmt.close();
+        conn.commit();
+      } catch (Exception e) {
+        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        System.exit(0);
+      }
       sendGameBoardToAllPlayers(gson.toJson(gameboard));
     });
 
@@ -114,7 +181,7 @@ public final class PlayGame {
       String playerId = ctx.pathParam("playerId");
       int id = Integer.parseInt(playerId);
 
-
+      System.out.println(ctx.body());
       String[] param = ctx.body().split("&");
       String x1 = param[0].split("=")[1];
       int x = Integer.parseInt(x1);
@@ -127,8 +194,42 @@ public final class PlayGame {
 
       // try to add move
       Message msg;
+
       if (gameboard.addMove(move)) {
         // added successfully
+        // we update the database first
+        String sql = "INSERT INTO GAME VALUES(";
+        sql += "\'" + gameboard.getP1().getType() + "\',";
+        sql += "\'" + gameboard.getP2().getType() + "\',";
+        sql += gameboard.getGameStarted() + ",";
+        sql += gameboard.getTurn() + ",";
+        sql += "\'";
+        char[][] gameState = gameboard.getBoardState();
+        for (int i = 0; i < gameboard.DIMENSION; i++) {
+          for (int j = 0; j < gameboard.DIMENSION; j++) {
+            if (gameState[i][j] != '\u0000') {
+              sql += gameState[i][j];
+            } else {
+              sql += GameBoard.mc;
+            }
+          }
+        }
+        sql += "\',";
+        sql += gameboard.getWinner() + ",";
+        sql += gameboard.getIsDraw() + ",";
+        sql += gameboard.getMoves() + ");";
+
+
+        try {
+          Statement stmt = conn.createStatement();
+          stmt.executeUpdate(sql);
+          stmt.close();
+          conn.commit();
+        } catch (Exception e) {
+          System.err.println(e.getClass().getName() + ": " + e.getMessage());
+          System.exit(0);
+        }
+
         msg = new Message(true, CODE, "");
       } else {
         // move invalid
@@ -138,7 +239,6 @@ public final class PlayGame {
       ctx.result(gson.toJson(msg));
       // update our gameboard
       sendGameBoardToAllPlayers(gson.toJson(gameboard));
-
     });
 
     // Web sockets - DO NOT DELETE or CHANGE
@@ -167,6 +267,12 @@ public final class PlayGame {
    * stop the app.
    */
   public static void stop() {
+    try {
+      conn.close();
+    } catch (Exception e) {
+      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      System.exit(0);
+    }
     app.stop();
   }
 }

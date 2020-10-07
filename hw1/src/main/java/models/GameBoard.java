@@ -4,6 +4,10 @@
 
 package models;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 public class GameBoard {
 
   /**
@@ -14,7 +18,12 @@ public class GameBoard {
   /**
    * the length and width of this board.
    */
-  static final int DIMENSION = 3;
+  public static final int DIMENSION = 3;
+
+  /**
+   * special char to trick db
+   */
+  public static final char mc = '1';
 
   /**
    * the first player in this game.
@@ -57,11 +66,11 @@ public class GameBoard {
   private int moves;
 
 
-
   /**
    * construct a new gameboard and initialize the fields.
    */
   public GameBoard() {
+
     this.p1 = null;
     this.p2 = null;
     this.gameStarted = false;
@@ -102,6 +111,19 @@ public class GameBoard {
     return this.turn;
   }
 
+  /**
+   * the board states.
+   */
+  public char[][] getBoardState() {
+    return this.boardState;
+  }
+
+  /**
+   * the moves
+   */
+  public int getMoves() {
+    return this.moves;
+  }
 
 
   /**
@@ -177,7 +199,6 @@ public class GameBoard {
   public void setIsDraw(final boolean t) {
     this.isDraw = t;
   }
-
 
 
   /**
@@ -335,6 +356,51 @@ public class GameBoard {
     }
 
     return true;
+  }
+
+  /**
+   * restore the gameboard state from the connection to some db.
+   * 
+   * @param conn the connection to the db
+   */
+  public void restoreState(Connection conn) {
+    try {
+      Statement stmt = conn.createStatement();
+      ResultSet rs =
+          stmt.executeQuery("SELECT * FROM GAME WHERE MOVES = " + "(select MAX(moves) from GAME);");
+      if (!rs.next()) {
+        return;
+      }
+      String player1 = rs.getString("PLAYERONE");
+      String player2 = rs.getString("PLAYERTWO");
+      if (player1 != null) {
+        this.p1 = new Player(player1.charAt(0), 1);
+      }
+      if (player2 != null) {
+        this.p2 = new Player(player2.charAt(0), 2);
+      }
+      this.isDraw = rs.getBoolean("ISDRAW");
+      this.moves = rs.getInt("MOVES");
+      this.winner = rs.getInt("WINNER");
+      this.gameStarted = rs.getBoolean("GAMESTARTED");
+      this.turn = rs.getInt("TURN");
+      String bstate = rs.getString("BOARDSTATE");
+      if (bstate != null) {
+        for (int i = 0; i < DIMENSION; i++) {
+          for (int j = 0; j < DIMENSION; j++) {
+            char tmp = bstate.charAt(i * 3 + j);
+            if (tmp != this.mc) {
+              this.boardState[i][j] = tmp;
+            }
+          }
+        }
+      }
+      stmt.close();
+      rs.close();
+    } catch (Exception e) {
+      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      System.exit(0);
+    }
   }
 
 
