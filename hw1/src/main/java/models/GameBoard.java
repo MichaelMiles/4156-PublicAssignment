@@ -21,7 +21,7 @@ public class GameBoard {
   public static final int DIMENSION = 3;
 
   /**
-   * special char to trick db
+   * special char to trick db.
    */
   public static final char mc = '1';
 
@@ -119,7 +119,7 @@ public class GameBoard {
   }
 
   /**
-   * the moves
+   * the moves.
    */
   public int getMoves() {
     return this.moves;

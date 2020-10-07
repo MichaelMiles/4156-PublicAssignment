@@ -4,6 +4,8 @@
 
 package controllers;
 
+import com.google.gson.Gson;
+import io.javalin.Javalin;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -11,13 +13,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Queue;
-import org.eclipse.jetty.websocket.api.Session;
-import com.google.gson.Gson;
-import io.javalin.Javalin;
 import models.GameBoard;
 import models.Message;
 import models.Move;
 import models.Player;
+import org.eclipse.jetty.websocket.api.Session;
+
 
 public final class PlayGame {
 
