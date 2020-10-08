@@ -6,6 +6,7 @@ package models;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class GameBoard {
@@ -114,8 +115,8 @@ public class GameBoard {
   /**
    * the board states.
    */
-  public char[][] getBoardState() {
-    return this.boardState;
+  public char getBoardState(int i, int j) {
+    return this.boardState[i][j];
   }
 
   /**
@@ -172,7 +173,14 @@ public class GameBoard {
   public void setGameStarted(final boolean t) {
     this.gameStarted = t;
   }
-
+  
+  /**
+   * set the board states.
+   */
+  public char setBoardState(int i, int j, char val) {
+    return this.boardState[i][j] = val;
+  }
+  
   /**
    * set the id of the player who should play this turn.
    * 
@@ -364,9 +372,11 @@ public class GameBoard {
    * @param conn the connection to the db
    */
   public void restoreState(Connection conn) {
+    Statement stmt = null;
+    ResultSet rs = null;
     try {
-      Statement stmt = conn.createStatement();
-      ResultSet rs =
+      stmt = conn.createStatement();
+      rs =
           stmt.executeQuery("SELECT * FROM GAME WHERE MOVES = " + "(select MAX(moves) from GAME);");
       if (!rs.next()) {
         return;
@@ -399,7 +409,23 @@ public class GameBoard {
       rs.close();
     } catch (Exception e) {
       System.err.println(e.getClass().getName() + ": " + e.getMessage());
-      System.exit(0);
+    } finally {
+      try {
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      } finally {
+        try {
+          if (rs != null) {
+            rs.close();
+          }
+        } catch (SQLException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
     }
   }
 

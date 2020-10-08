@@ -11,7 +11,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import models.GameBoard;
+import models.GameBoard; 
 import models.Move;
 import models.Player;
 
@@ -250,7 +250,7 @@ class GameBoardTest {
       gameboard.restoreState(conn);
       assertEquals(null, gameboard.getP1());
       assertEquals(null, gameboard.getP2());
-      assertEquals('\u0000', gameboard.getBoardState()[0][1]);
+      assertEquals('\u0000', gameboard.getBoardState(0, 1));
       assertFalse(gameboard.getGameStarted());
       assertEquals(gameboard.getTurn(), 1);
       assertEquals(gameboard.getWinner(), 0);
@@ -289,7 +289,7 @@ class GameBoardTest {
       gameboard.restoreState(conn);
       assertEquals(null, gameboard.getP1());
       assertEquals(null, gameboard.getP2());
-      assertEquals('\u0000', gameboard.getBoardState()[0][1]);
+      assertEquals('\u0000', gameboard.getBoardState(0, 1));
       assertFalse(gameboard.getGameStarted());
       assertEquals(gameboard.getTurn(), 1);
       assertEquals(gameboard.getWinner(), 0);
@@ -328,7 +328,7 @@ class GameBoardTest {
       gameboard.restoreState(conn);
       assertEquals('X', gameboard.getP1().getType());
       assertEquals('O', gameboard.getP2().getType());
-      assertEquals('O', gameboard.getBoardState()[0][1]);
+      assertEquals('O', gameboard.getBoardState(0, 1));
       assertFalse(gameboard.getGameStarted());
       assertEquals(gameboard.getTurn(), 1);
       assertEquals(gameboard.getWinner(), 0);

@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Queue;
 import models.GameBoard;
@@ -18,6 +20,7 @@ import models.Message;
 import models.Move;
 import models.Player;
 import org.eclipse.jetty.websocket.api.Session;
+
 
 
 public final class PlayGame {
@@ -101,16 +104,19 @@ public final class PlayGame {
       // initialize our database and clean table GAME
       Statement stmt;
       stmt = conn.createStatement();
-      String sql = "DROP TABLE IF EXISTS GAME";
-      stmt.executeUpdate(sql);
-      sql = "CREATE TABLE GAME " + "(PLAYERONE      CHAR(1)," + " PLAYERTWO      CHAR(1), "
-          + " GAMESTARTED    BOOLEAN  DEFAULT  0, " + " TURN           INT      DEFAULT  1, "
-          + " BOARDSTATE     CHAR(9), " + " WINNER         INT      DEFAULT  0, "
-          + " ISDRAW         BOOLEAN  DEFAULT  0, "
-          + " MOVES          INT   PRIMARY KEY   DEFAULT  0);";
-      stmt.executeUpdate(sql);
-      stmt.close();
-      conn.commit();
+      try {
+        String sql = "DROP TABLE IF  EXISTS GAME";
+        stmt.executeUpdate(sql);
+        sql = "CREATE TABLE  GAME " + "(PLAYERONE      CHAR(1)," + " PLAYERTWO      CHAR(1), "
+            + " GAMESTARTED    BOOLEAN  DEFAULT  0, " + " TURN           INT      DEFAULT  1, "
+            + " BOARDSTATE     CHAR(9), " + " WINNER         INT      DEFAULT  0, "
+            + " ISDRAW         BOOLEAN  DEFAULT  0, "
+            + " MOVES          INT   PRIMARY KEY   DEFAULT  0);";
+        stmt.executeUpdate(sql);
+        conn.commit();
+      } finally {
+        stmt.close();
+      }
       ctx.redirect("/tictactoe.html");
     });
 
@@ -125,6 +131,7 @@ public final class PlayGame {
       gson = new Gson();
 
       String type = ctx.body();
+
       char t = 'O';
       if (type.equals("type=X")) {
         t = 'X';
@@ -133,15 +140,22 @@ public final class PlayGame {
       gameboard.setP1(new Player(t, 1));
 
       // update the db
+      Statement stmt = null;
       try {
-        Statement stmt = conn.createStatement();
+        stmt = conn.createStatement();
         String sql = "INSERT INTO GAME(moves, playerone) values (0, \'" + t + "\');";
         stmt.executeUpdate(sql);
-        stmt.close();
         conn.commit();
       } catch (Exception e) {
         System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        System.exit(0);
+      } finally {
+        try {
+          if (stmt != null) {
+            stmt.close();
+          }
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
       }
 
       // send back json response
@@ -162,15 +176,16 @@ public final class PlayGame {
       gameboard.setP2(new Player(tmp, 2));
       gameboard.setGameStarted(true);
       // update the db
+      Statement stmt = conn.createStatement();
       try {
-        Statement stmt = conn.createStatement();
         String sql = "UPDATE GAME SET playertwo = \'" + tmp + "\', gamestarted = true ;";
         stmt.executeUpdate(sql);
         stmt.close();
         conn.commit();
       } catch (Exception e) {
         System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        System.exit(0);
+      } finally {
+        stmt.close();
       }
       sendGameBoardToAllPlayers(gson.toJson(gameboard));
     });
@@ -198,36 +213,43 @@ public final class PlayGame {
       if (gameboard.addMove(move)) {
         // added successfully
         // we update the database first
-        String sql = "INSERT INTO GAME VALUES(";
-        sql += "\'" + gameboard.getP1().getType() + "\',";
-        sql += "\'" + gameboard.getP2().getType() + "\',";
-        sql += gameboard.getGameStarted() + ",";
-        sql += gameboard.getTurn() + ",";
-        sql += "\'";
-        char[][] gameState = gameboard.getBoardState();
-        for (int i = 0; i < gameboard.DIMENSION; i++) {
-          for (int j = 0; j < gameboard.DIMENSION; j++) {
-            if (gameState[i][j] != '\u0000') {
-              sql += gameState[i][j];
-            } else {
-              sql += GameBoard.mc;
+        String insertSql = "INSERT INTO GAME VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement pstmt = conn.prepareStatement(insertSql);
+        try {
+          pstmt.setString(1, gameboard.getP1().getType() + "");
+          pstmt.setString(2, gameboard.getP2().getType() + "");
+
+          pstmt.setBoolean(3, gameboard.getGameStarted());
+
+          pstmt.setInt(4, gameboard.getTurn());
+
+          StringBuilder tmp = new StringBuilder();
+          for (int i = 0; i < gameboard.DIMENSION; i++) {
+            for (int j = 0; j < gameboard.DIMENSION; j++) {
+              if (gameboard.getBoardState(i, j) != '\u0000') {
+                tmp.append(gameboard.getBoardState(i, j));
+              } else {
+                tmp.append(GameBoard.mc);
+              }
             }
           }
-        }
-        sql += "\',";
-        sql += gameboard.getWinner() + ",";
-        sql += gameboard.getIsDraw() + ",";
-        sql += gameboard.getMoves() + ");";
+
+          pstmt.setString(5, tmp.toString());
+
+          pstmt.setInt(6, gameboard.getWinner());
+
+          pstmt.setBoolean(7, gameboard.getIsDraw());
+
+          pstmt.setInt(8, gameboard.getMoves());
 
 
-        try {
-          Statement stmt = conn.createStatement();
-          stmt.executeUpdate(sql);
-          stmt.close();
+          pstmt.executeUpdate();
+          pstmt.close();
           conn.commit();
         } catch (Exception e) {
           System.err.println(e.getClass().getName() + ": " + e.getMessage());
-          System.exit(0);
+        } finally {
+          pstmt.close();
         }
 
         msg = new Message(true, CODE, "");
